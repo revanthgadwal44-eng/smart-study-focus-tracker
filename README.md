@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Smart Study Focus Tracker
 
 A full-stack study session tracker with analytics, gamification, and productivity insights.
@@ -109,3 +110,6 @@ The app runs at **http://127.0.0.1:5000**
 - Set `SECRET_KEY` environment variable in production
 - Use a production WSGI server (e.g. Gunicorn)
 - Enable HTTPS for session cookies
+=======
+# smart-study-focus-tracker
+>>>>>>> 5b88dbf6d90e44b5f73f34d3c76cc29135867f5c
