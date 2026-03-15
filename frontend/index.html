@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Study Focus Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="icon" href="images/logo.png">
+</head>
+<body>
+  <!-- Auth screens -->
+  <div id="auth-container" class="auth-container">
+    <div class="auth-card">
+      <h1>Smart Study Focus Tracker</h1>
+      <div id="auth-tabs">
+        <button type="button" class="auth-tab active" data-tab="login">Login</button>
+        <button type="button" class="auth-tab" data-tab="signup">Sign Up</button>
+      </div>
+
+      <form id="login-form" class="auth-form">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+
+      <form id="signup-form" class="auth-form hidden">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password (min 6 chars)" required minlength="6">
+        <button type="submit">Create Account</button>
+      </form>
+
+      <p id="auth-error" class="auth-error"></p>
+    </div>
+  </div>
+
+  <!-- Main Dashboard (shown when logged in) -->
+  <div id="dashboard" class="dashboard hidden">
+    <header class="header">
+      <div class="logo-container">
+    <img src="images/logo.png" class="logo" alt="Study Tracker Logo">
+    <h1>Smart Study Focus Tracker</h1>
+  </div>
+      <!-- <h1>Smart Study Focus Tracker</h1> -->
+      <div class="header-actions">
+        <span id="user-display" class="user-display"></span>
+        <button type="button" id="logout-btn" class="btn btn-secondary">Logout</button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Study Session Tracker -->
+      <section class="card session-card">
+        <h2>Study Session</h2>
+        <div class="session-controls">
+          <div class="subject-manager">
+            <div class="subject-input-row">
+              <input type="text" id="new-subject" placeholder="Enter subject name">
+              <button type="button" id="add-subject-btn" class="btn btn-primary">Add Subject</button>
+            </div>
+            <div id="subjects-list" class="subjects-list"></div>
+          </div>
+          <select id="subject-select">
+            <option value="">Select subject...</option>
+          </select>
+          <div class="timer-container">
+            <svg class="progress-ring" width="160" height="160">
+            <circle
+              class="progress-ring-circle"
+              stroke="#3b82f6"
+              stroke-width="6"
+              fill="transparent"
+              r="70"
+              cx="80"
+              cy="80"
+            />
+            </svg>
+
+            <div id="timer-display">00:00:00</div>
+          </div>
+
+          <div class="timer-buttons">
+            <button type="button" id="start-timer" class="btn btn-primary">Start</button>
+            <button type="button" id="stop-timer" class="btn btn-danger" disabled>Stop & Save</button>
+            <button type="button" id="distraction-btn" class="btn btn-warning" title="Mark distraction">⚠ Distraction</button>
+          </div>
+          <textarea id="session-notes" placeholder="Session notes (optional)..." rows="2"></textarea>
+        </div>
+      </section>
+
+      <!-- Recent Sessions -->
+      <section class="card recent-sessions-card">
+        <h2>Recent Sessions</h2>
+        <div id="recent-sessions-list" class="recent-sessions-list">Loading...</div>
+      </section>
+
+      <!-- Daily Goal & Productivity Grade -->
+      <section class="card daily-goal-card">
+        <h2>Daily Goal & Grade</h2>
+        <div class="daily-goal-row">
+          <div class="daily-goal-item">
+            <span class="daily-goal-label">Daily Goal (120 min)</span>
+            <div class="progress-bar-container">
+              <div id="daily-goal-fill" class="progress-bar-fill"></div>
+              <span id="daily-goal-text" class="progress-bar-text">0 / 120 min</span>
+            </div>
+          </div>
+          <div class="grade-item">
+            <span class="grade-label">Productivity Grade</span>
+            <span id="productivity-grade" class="grade-value">—</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Row -->
+      <section class="stats-row">
+        <div class="stat-card">
+          <span class="stat-label">Today</span>
+          <span id="today-hours" class="stat-value">0h 0m</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">This Week</span>
+          <span id="week-hours" class="stat-value">0h 0m</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Streak</span>
+          <span id="streak-value" class="stat-value">0 days</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Focus Score</span>
+          <span id="focus-score" class="stat-value">0</span>
+        </div>
+      </section>
+
+      <!-- Weekly Progress Bar -->
+      <section class="card">
+        <h2>Weekly Progress (Mon–Sun)</h2>
+        <div id="weekly-progress" class="weekly-progress loading-skeleton"></div>
+      </section>
+
+      <!-- Subject Breakdown Chart -->
+      <section class="card">
+        <h2>Subject Breakdown</h2>
+        <div id="chart-container" class="chart-container chart-loading">
+          <canvas id="subject-chart"></canvas>
+        </div>
+      </section>
+      <section class="card heatmap-card">
+        <h2>Study Activity</h2>
+        <div id="heatmap" class="heatmap-grid heatmap-loading"></div>
+      </section>
+
+      <!-- Gamification -->
+      <section class="card gamification-card">
+        <h2>Progress & Achievements</h2>
+        <div class="gamification-content">
+          <div class="level-section">
+            <div class="level-badge">
+              <span id="level-number">1</span>
+              <small>Level</small>
+            </div>
+            <div class="xp-section">
+              <span class="xp-label"><span id="xp-current">0</span> / <span id="xp-next">500</span> XP</span>
+              <div class="xp-bar">
+                <div id="xp-fill" class="xp-fill"></div>
+              </div>
+            </div>
+          </div>
+          <div class="badges-section">
+            <h3>Badges</h3>
+            <div id="badges-list" class="badges-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Smart Recommendations -->
+      <section class="card recommendation-card">
+        <h2>Smart Recommendation</h2>
+        <p id="recommendation-text" class="recommendation-text loading-text">Loading...</p>
+      </section>
+
+      <!-- Productivity Prediction -->
+      <section class="card prediction-card">
+        <h2>Productivity Prediction</h2>
+        <p id="prediction-text" class="prediction-text">Predicted study time tomorrow: <strong id="predicted-minutes" class="loading-text">0</strong> minutes</p>
+      </section>
+
+      <!-- Reports -->
+      <section class="card">
+        <h2>Reports</h2>
+        <button type="button" id="download-pdf" class="btn btn-primary">Download Weekly PDF Report</button>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
