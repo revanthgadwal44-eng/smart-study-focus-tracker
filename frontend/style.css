@@ -241,16 +241,29 @@ body {
 }
 
 .card {
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  border: 1px solid var(--border);
+  background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 55%),
+              radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.18), transparent 60%),
+              var(--bg-card);
+  border-radius: 18px;
+  padding: 1.75rem 1.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(18px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(96, 165, 250, 0.6);
+  box-shadow: 0 26px 60px rgba(15, 23, 42, 0.9);
 }
 
 .card h2 {
-  margin: 0 0 1rem;
-  font-size: 1.1rem;
-  color: var(--text-primary);
+  margin: 0 0 1.1rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 /* Session card */
@@ -273,7 +286,7 @@ body {
   position:relative;
   width:160px;
   height:160px;
-  margin:40px auto;
+  margin:32px auto 8px;
 }
 
 .progress-ring{
@@ -285,7 +298,7 @@ body {
 
 .progress-ring-circle{
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(91,140,255,0.6));
+  filter: drop-shadow(0 0 10px rgba(59,130,246,0.9));
 }
 
 #timer-display{
@@ -326,7 +339,7 @@ body {
 
 /* Subject Manager */
 .subject-manager {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .subjects-list {
@@ -518,7 +531,7 @@ body {
 
 .weekly-day .day-bar .fill {
   width: 100%;
-  background: var(--accent-cyan);
+  background: linear-gradient(180deg, var(--accent-cyan), #22c55e);
   border-radius: 4px 4px 0 0;
   min-height: 4px;
   transition: height 0.3s ease;
